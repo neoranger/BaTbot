@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # BaTbot current version
-VERSION="1.4.3-1 - ITA by eliafino"
+VERSION="1.4.3-2 - ITA by eliafino"
 
 # Inserire il token del BOT restituito da BotFather
 TELEGRAMTOKEN="< token del BOT >"
@@ -135,12 +135,12 @@ while true; do
 							CMDORIG=${CMDORIG//@R3/${BASH_REMATCH[3]}}
 
 							if [[ $UserAllowed -eq 1 ]]; then
-								echo "Comando ${s} ricevuto, eseguo: ${CMDORIG}"
-								CMDOUTPUT=`$CMDORIG`
-								if [[ $FIRSTTIME -eq 1 || $DATEDIFF -gt 20 ]]; then
+								if [[ $FIRSTTIME -eq 1 || $DATEDIFF -gt 10 ]]; then
 									echo "Messaggio vecchio, nessuna risposta all'utente."
 									curl -s -d "text=Messaggio vecchio&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 								else
+									echo "Comando ${s} ricevuto, eseguo: ${CMDORIG}"
+									CMDOUTPUT=`$CMDORIG`
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									if [[ ${FROMID} != ${PERSONALID} ]]; then
 										curl -s -d "text=${s} ricevuto da ${FIRSTNAMEUTF8} ${LASTNAME} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
