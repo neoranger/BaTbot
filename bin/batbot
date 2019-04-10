@@ -1,52 +1,58 @@
 #!/bin/bash
 
-# BaTbot current version
-VERSION="1.4.3-2 - ITA by eliafino"
+# BaTbot versión actual
+VERSION="1.4.3.4\nBot de Telegram en Bash traducido por uGeek"
+# Fork de 1.4.3.4 - uGeekPodcast
 
-# Inserire il token del BOT restituito da BotFather
-TELEGRAMTOKEN="< token del BOT >"
+# Ingrese el token BOT devuelto por BotFather
+TELEGRAMTOKEN="< Intruduce aquí el nº de Token >"
 
-# Inserire l'ID dell'utente master per le notifiche di uso
-PERSONALID=" ID utente master "
+# Ingrese el ID de usuario maestro para notificaciones de uso
+PERSONALID="< ID del usuario Maestro >" 
+ 
+# Directorio de usuarios (Ruta donde está nuestra carpeta .batbot en nuestro servidor, Raspberry,...)
+BATBOTUSR="/root/.batbot" 
 
-# Directory utente
-BATBOTUSR=/root/.batbot
-
-# creare il file allowed_users specificando gli ID degli utenti autorizzati all'invio dei comandi. Un ID per riga."
+# cree el archivo allowed_users especificando las ID de los usuarios autorizados para enviar los comandos. Una identificación por línea 
 ALLOWEDUSER=$BATBOTUSR/allowed_users
 
-# controllo nuovi messaggi ogni:
-CHECKNEWMSG=1
+# revisar nuevos mensajes cada X segundos:
+CHECKNEWMSG=5
 
-# Comandi
-# rispettare questo formato: ["/miocomando"]='<system command>'
-# per favore, ricordarsi di rimuovere gli esempi non necessari
-# Per aggiungere questi comandi nei comandi personalizzati,
-# usare la funzione /setcommands in BotFather
+# Comandos
+# respete este formato: ["/ mi comando"] = '<comando del sistema>'
+# Por favor, recuerde eliminar los ejemplos innecesarios
+# Para agregar estos comandos a los comandos personalizados,
+# usa la función / setcommands en BotFather
 
 declare -A botcommands=(
 	["/start"]='exec userlist @USERID:@FIRSTNAME@LASTNAME'
-	["/myid"]='echo Il tuo user ID Ã¨: @USERID'
-	["/myuser"]='echo Il tuo nome utente Ã¨: @USERNAME'
+	["/myid"]='echo Tu ID es: @USERID'
+	["/myuser"]='echo Tu nombre de usuario es: @USERNAME'
 	["/ping ([a-zA-Z0-9]+)"]='echo Pong: @R1'
 	["/uptime"]="uptime"
 	["/add ([0-9]+)"]='exec admadduser @USERID @R1'
 	["/del ([0-9]+)"]='exec admdeluser @USERID @R1'
 	["/lista"]='exec admlistuser @USERID'
-#	["/run (.*)"]="exec @R1"
+	["/run (.*)"]="exec @R1"
+	["/docker_nginx_start"]="docker stop nginx"
+	["/docker_nginx_stop"]="docker start nginx"
+	["/menu"]="echo -e Bienvenido a Mi Bot\n/myid \n/myuser \n/uptime \n/run \n/ping \n\nDockers:\n/docker_nginx_start \n/docker_nginx_stop \n\n\n/menu"
+
+	
 )
 
 FIRSTTIME=0
 
-echo -e "\nAvvio BaTbot v${VERSION}\n"
+echo -e "\nBaTbot v${VERSION}\n"
 ABOUTME=`curl -s "https://api.telegram.org/bot${TELEGRAMTOKEN}/getMe"`
 if [[ "$ABOUTME" =~ \"ok\"\:true\, ]]; then
 	if [[ "$ABOUTME" =~ \"username\"\:\"([^\"]+)\" ]]; then
-		echo -e "Nome BOT:\t ${BASH_REMATCH[1]}"
+		echo -e "Nick del BOT:\t @${BASH_REMATCH[1]}"
 	fi
 
 	if [[ "$ABOUTME" =~ \"first_name\"\:\"([^\"]+)\" ]]; then
-		echo -e "Nome Utente:\t ${BASH_REMATCH[1]}"
+		echo -e "Nombre del Bot:\t ${BASH_REMATCH[1]}"
 	fi
 
 	if [[ "$ABOUTME" =~ \"id\"\:([0-9\-]+), ]]; then
@@ -55,7 +61,7 @@ if [[ "$ABOUTME" =~ \"ok\"\:true\, ]]; then
 	fi
 
 else
-	echo "Errore: forse token sbagliato... esco."
+	echo "Error: tal vez el token este equivocado ... saliendo"
 	exit;
 fi
 
@@ -66,7 +72,7 @@ else
 	FIRSTTIME=1;
 fi
 
-echo -e "\nBene... aspetto nuovi messaggi.\n"
+echo -e "\nIniciando... Esperando un nuevo mensaje\n"
 
 while true; do
 	MSGOUTPUT=$(curl -s "https://api.telegram.org/bot${TELEGRAMTOKEN}/getUpdates")
@@ -109,7 +115,7 @@ while true; do
 		fi
 
 		if [[ $MSGID -ne 0 && $CHATID -ne 0 ]]; then
-			#controllo se l'utente Ã¨ autorizzato
+			### comprobar si el usuario está autorizado 
 			UserAllowed=$(grep -x "${FROMID}" $ALLOWEDUSER |wc -l)
 			LASTMSGID=$(cat "${BOTID}.lastmsg")
 			FIRSTNAMEUTF8=$(echo -e "$FIRSTNAME")
@@ -136,14 +142,14 @@ while true; do
 
 							if [[ $UserAllowed -eq 1 ]]; then
 								if [[ $FIRSTTIME -eq 1 || $DATEDIFF -gt 10 ]]; then
-									echo "Messaggio vecchio, nessuna risposta all'utente."
-									curl -s -d "text=Messaggio vecchio&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+									echo "Mensaje antiguo, no hay respuesta del usuario"
+									curl -s -d "text=Mensaje antiguo&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 								else
-									echo "Comando ${s} ricevuto, eseguo: ${CMDORIG}"
+									echo "Comando ${s} recibido, ejecuto: ${CMDORIG}"
 									CMDOUTPUT=`$CMDORIG`
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									if [[ ${FROMID} != ${PERSONALID} ]]; then
-										curl -s -d "text=${s} ricevuto da ${FIRSTNAMEUTF8} ${LASTNAME} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+										curl -s -d "text=${s} recibido de ${FIRSTNAMEUTF8} ${LASTNAME} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									fi
 								fi
 							else
@@ -151,11 +157,11 @@ while true; do
 									CMDOUTPUT=`$CMDORIG`
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 								else
-									CMDOUTPUT="BOT Privato. Non sei autorizzato! Il tuo ID Ã¨: ${FROMID}, comunicalo all'amministratore per essere abilitato."
-									echo "Utente non in lista: ${s} ricevuto da ${FIRSTNAMEUTF8} ${FROMID}"
+									CMDOUTPUT="BOT Privado. No estas autorizado a utilizarlo! tu ID es: ${FROMID}, Comunicate con el administrador para que te habilite."
+									echo "Tu nombre no está en la lista: ${s} ricevuto darecibido por ${FIRSTNAMEUTF8} ${FROMID}"
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									if [[ ${FROMID} != ${PERSONALID} ]]; then
-										curl -s -d "text=Utente non abilitato: ${s} ricevuto da ${FIRSTNAMEUTF8} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+										curl -s -d "text=Usuario no habilitado: ${s} recibido de ${FIRSTNAMEUTF8} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									fi
 									if [[ ${s} == "/start" ]]; then
 										userlist ${FROMID}:${FIRSTNAMEUTF8}${LASTNAME}
@@ -168,17 +174,17 @@ while true; do
 				else
 					echo $MSGID > "${BOTID}.lastmsg"
 					if [[ $UserAllowed -eq 1 ]]; then
-						echo "Comando $TEXT non riconosciuto."
-						curl -s -d "text=Comando $TEXT non riconosciuto.&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+						echo "Comando $TEXT no reconocido"
+						curl -s -d "text=Comando $TEXT no reconocido.&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 						if [[ ${FROMID} != ${PERSONALID} ]]; then
-							curl -s -d "text=$TEXT non riconosciuto ricevuto da ${FROMID} ${FIRSTNAMEUTF8} ${LASTNAME}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+							curl -s -d "text=$TEXT no reconocido recibido de ${FROMID} ${FIRSTNAMEUTF8} ${LASTNAME}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 						fi
 					else
-						CMDOUTPUT="Non sei autorizzato ad eseguire questo comando!"
-						echo "Comando non abilitato: ${s} ricevuto da ${FROMID} ${FIRSTNAMEUTF8}"
+						CMDOUTPUT="¡No estás autorizado para ejecutar este comando!"
+						echo "Comando no habilitado : ${s} recibido de ${FROMID} ${FIRSTNAMEUTF8}"
 						curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 						if [[ ${FROMID} != ${PERSONALID} ]]; then
-							curl -s -d "text=Comando non abilitato: ${s} ricevuto da ${FROMID} ${FIRSTNAMEUTF8} ${LASTNAME}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
+							curl -s -d "text=Comando no habilitado: ${s} recibido de ${FROMID} ${FIRSTNAMEUTF8} ${LASTNAME}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 						fi
 					fi
 				fi

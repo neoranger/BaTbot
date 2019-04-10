@@ -1,0 +1,119 @@
+* BaTbot v1.4.3.4 - Bash Telegram BOT
+batbot es un BOT de Telegram simple escrito en Bash que puede responder a los mensajes de los usuarios, ejecutar comandos y hacer otras cosas interesantes.
+** CAMBIO
+*** v1.4.3.4- Fork y Traducción al Castellano por uGeekPodcast 
+- Traducción al Castellano
+*** v1.4.3-ITA por eliafino
+
+- cambió la variable BOTPATH ​​en NMSGPATH y configure la ruta de guardado configurable. Tiene en cuenta los mensajes de texto no procesados ​​para los vecinos.
+- Lista agregada de usuarios aceptados "allowed_user" por @do2sz
+- Agrupa notifica al usuario maestro de los comandos enviados al BOT.
+- Agregación de la notificación del comandante no reconocida.
+- comentar e mensaje en italiano
+*** v1.4.3
+- se ajustan los comandos de expresiones regulares
+*** v1.4.2
+- mensajes de texto fijos analizador de expresiones regulares
+*** v1.4.1
+
+- caracteres fijos UTF-8 en nombre de usuario
+ 
+** Índice
+- Uso
+- Comandos simples
+- Variables
+- Comandos con expresiones regulares
+- Enviar mensaje
+- QUE HACER
+** Uso
+Iniciar desde la consola:
+#+begin_src 
+./botbat
+#+end_src
+** Comandos simples
+Dentro del script botbat encontrará una lista de comandos de ejemplo que puede configurar. Por ejemplo:
+#+begin_src 
+["/hello"]="echo Hi"
+#+end_src	
+este comando activa el mensaje */hello* de un usuario, ejecuta el comando del sistema *echo Hi* y devuelve la salida del comando al usuario mediante un mensaje.
+
+¿Quieres saber el tiempo de actividad de tu servidor? No hay problema:
+#+begin_src
+["/uptime"]="/usr/bin/uptime"
+#+end_src 
+¿Espacio en disco libre a través de Telegram? vamos a hacerlo:
+#+begin_src 
+["/disks"]="/bin/df -h"
+#+end_src
+Ejecutar script externo:
+#+begin_src 
+["/auth ([a-zA-Z0-9]+)"]="/usr/local/bin/auth.sh @R1"
+#+end_src
+No intentes esto en casa :
+#+begin_src 
+["/exec (.*)"]="exec @R1"
+#+end_src
+** Variables
+Puedes usar variables! por ejemplo:
+#+begin_src 
+["/hello"]="echo Hi @FIRSTNAME, encantado de conocerte :)"
+#+end_src
+
+BaTbot muestra en la consola, y en tiempo real, todos los mensajes recibidos:
+ #+begin_src 
++ 
+Set Token to: ****
+Check for new messages every: 1 seconds
++
+
+Initializing BaTbot v1.4.3
+Username:	wafblue_bot
+First name:	wafblue
+Bot ID:		****
+Done. Waiting for new messages...
+
+[chat **, from  **] <theMiddle - Andrea Menin> \/hello
+Command /hello received, running cmd: echo Hi Andrea, pleased to meet you :)
+ #+end_src
+** Lista de Varibales
+- @USERID 	  (int) ID del usuario que envió el comando activado
+- @USERNAME 	(string) Nombre de usuario de usuario en Telegram
+- @FIRSTNAME	(string) El primer nombre del usuario
+- @LASTNAME	  (string) El apellido del usuario
+- @CHATID 	  (int)  El ID de chat donde el usuario envió un comando
+- @MSGID 		  (int) ID del mensaje que activó un comando
+- @TEXT		    (string) El texto completo de un mensaje recibido
+- @FROMID		  (int) ID del usuario que envió un mensaje
+
+Regex group extract
+- @R1 		Contenido del primer grupo (.*)
+- @R2 		Contenido del segundo grupo (.*)
+- @R3 		Contenido del tercero grupo (.*)
+
+** Comando con expresiones regulares
+También puede configurar un comando con argumentos, por ejemplo: "/ping 1234". Todos los argumentos pueden ser expresiones regulares, por ejemplo:
+#+begin_src 
+["/ping ([0-9]+)"]="echo Pong: @R1"
+
+["/blacklist ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"]="/sbin/iptables -A INPUT -s @R1 -j DROP"
+
+["/whois ([a-zA-Z0-9\.\-]+)"]="/usr/bin/whois @R1"
+
+["/host ([a-zA-Z0-9\.\-]+)"]="/usr/bin/host @R1"
+#+end_src
+
+** Enviar mensaje
+Cuando BaTbot se está ejecutando, puede enviar un mensaje utilizando el ID del usuario.
+
+Usando el comando *.msg* directamente en la consola. 
+#+begin_src 
+.msg <ID> <MENSAJE>
+#+end_src
+Por ejemplo:
+#+begin_src 
+[chat 110440209, from  110440209] <theMiddle - Andrea Menin> hi bot :)
+.msg 110440209 hey!!!
+#+end_src
+** QUE HACER
+2016-04-20 [high ] +Corregir el análisis de mensajes de texto en API2.0+ (gracias a rauhmaru)
+2015-11-17 Extracción [high ]dinámica del grupo de expresiones regulares
