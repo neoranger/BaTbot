@@ -8,8 +8,8 @@ if [[ $(grep -x "$1" $ALLSUPUSER |wc -l) -eq 1 ]]; then
 	for USER in $(cat $ALLUSER); do
 		ID=$(grep $USER $USERLIST | awk -F":" '{printf $1}')
 		NAME=$(grep $USER $USERLIST | awk -F":" '{printf $2}')
-		echo "ID Telegram: $ID - Utente: $NAME"
+		echo "ID Telegram: $ID - Usuario: $NAME"
 	done
 else
-	echo "Non sei abilitato a visualizzare la lista utenti"
+	echo "No estás autorizado para ver la lista de usuarios."
 fi

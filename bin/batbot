@@ -1,17 +1,20 @@
 #!/bin/bash
 
 # BaTbot versión actual
-VERSION="1.4.3.4\nBot de Telegram en Bash traducido por uGeek"
+VERSION="1.4.3.5\nBot de Telegram en Bash - Versión de NeoRanger"
+
 # Fork de 1.4.3.4 - uGeekPodcast
 
 # Ingrese el token BOT devuelto por BotFather
-TELEGRAMTOKEN="< Intruduce aquí el nº de Token >"
+TOKEN=$(cat token.txt)
+TELEGRAMTOKEN=$TOKEN
 
 # Ingrese el ID de usuario maestro para notificaciones de uso
-PERSONALID="< ID del usuario Maestro >" 
+PERID=$(cat id.txt)
+PERSONALID=$PERID 
  
 # Directorio de usuarios (Ruta donde está nuestra carpeta .batbot en nuestro servidor, Raspberry,...)
-BATBOTUSR="/root/.batbot" 
+BATBOTUSR="/home/pi/.batbot" 
 
 # cree el archivo allowed_users especificando las ID de los usuarios autorizados para enviar los comandos. Una identificación por línea 
 ALLOWEDUSER=$BATBOTUSR/allowed_users
@@ -28,6 +31,7 @@ CHECKNEWMSG=5
 declare -A botcommands=(
 	["/start"]='exec userlist @USERID:@FIRSTNAME@LASTNAME'
 	["/myid"]='echo Tu ID es: @USERID'
+        ["/hello"]="echo Hi @USERNAME!"
 	["/myuser"]='echo Tu nombre de usuario es: @USERNAME'
 	["/ping ([a-zA-Z0-9]+)"]='echo Pong: @R1'
 	["/uptime"]="uptime"
@@ -35,11 +39,25 @@ declare -A botcommands=(
 	["/del ([0-9]+)"]='exec admdeluser @USERID @R1'
 	["/lista"]='exec admlistuser @USERID'
 	["/run (.*)"]="exec @R1"
-	["/docker_nginx_start"]="docker stop nginx"
-	["/docker_nginx_stop"]="docker start nginx"
-	["/menu"]="echo -e Bienvenido a Mi Bot\n/myid \n/myuser \n/uptime \n/run \n/ping \n\nDockers:\n/docker_nginx_start \n/docker_nginx_stop \n\n\n/menu"
-
-	
+	["/menu"]="echo -e Bienvenido a Mi Bot\n/myid \n/myuser \n/uptime \n/run \n/ping \n/hello \n/add \n/del \n/lista \n/run \n/menu \n/temp \n/df \n/free \n/info \n/who \n/shutdown \n/reboot \n/repoup \n/sysup \n/distup \n/osversion \n/screens \n/weather \n/ps_ram \n/ps_cpu \n/server_torrent_restart \n/nmap_all \n/nmap_active \n\n\n/menu"
+        ["/temp"]="sudo vcgencmd measure_temp"
+        ["/df"]="inxi -p"
+        ["/free"]="free- m"
+        ["/info"]="screenfetch -n"
+        ["/who"]="who"
+        ["/shutdown"]="sudo shutdown -h now"
+        ["/reboot"]="sudo reboot"
+        ["/repoup"]="sudo apt-get update"
+        ["/sysup"]="sudo apt-get upgrade -y"
+        ["/distup´"]="sudo apt-get dist-upgrade -y"
+        ["/osversion"]="lsb_release -a"
+        ["/screens"]="screen -ls | grep "pi" "
+        ["/weather"]="inxi -w"
+        ["/ps_ram"]="ps aux | awk '{print $2, $4, $11}' | sort -k2r | head -n 10"
+        ["/ps_cpu"]="ps -Ao user,uid,comm,pid,pcpu,tty --sort=-pcpu | head -n 6"
+        ["/server_torrent_restart"]="sudo service transmission-daemon restart"
+        ["/nmap_all"]="sudo nast -m -i eth0"
+        ["/nmap_active"]="sudo nast -g -i eth0"
 )
 
 FIRSTTIME=0

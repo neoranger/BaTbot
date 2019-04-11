@@ -5,11 +5,11 @@ ALLSUPUSER=$HOME/.batbot/allowed_superusers
 
 if [[ $(grep -x "$1" $ALLSUPUSER |wc -l) -eq 1 ]]; then
 	if [[ $(grep -x "$2" $ALLUSER |wc -l) -eq 1 ]]; then
-		echo "Utente $2 già presente"
+		echo "Usuario $2 ya presente"
 	else
 		echo $2 >> $ALLUSER
-		echo "Aggiunto utente: $2"
+		echo "Usuario agregado: $2"
 	fi
 else
-	echo "Non sei abilitato ad aggiungere utenti"
+	echo "No estás autorizado para añadir usuarios."
 fi

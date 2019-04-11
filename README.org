@@ -1,11 +1,16 @@
-* BaTbot v1.4.3.4 - Bash Telegram BOT
-batbot es un BOT de Telegram simple escrito en Bash que puede responder a los mensajes de los usuarios, ejecutar comandos y hacer otras cosas interesantes.
+* BaTbot v1.4.3.5 - Bash Telegram BOT
+BaTbot es un BOT de Telegram simple escrito en Bash que puede responder a los mensajes de los usuarios, ejecutar comandos y hacer otras cosas interesantes.
+
 ** CAMBIO
+*** v1.4.3.5 - Fork por NeoRanger
+- Se tradujo del italiano al español los archivos: admadduser, admdeluser y admlistuser.
+- Se agregó archivo .gitignore para que no se tenga en cuenta los archivos *.lmsg que genera el bot.
+- Se agregaron los archivos token.txt y id.txt para que el bot tome los datos desde esos archivos sin estar puestos manualmente. Se agregaron los .txt al .gitignore
+
 *** v1.4.3.4- Fork y Traducción al Castellano por uGeekPodcast 
 - Traducción al Castellano
 *** v1.4.3-ITA por eliafino
-
-- cambió la variable BOTPATH ​​en NMSGPATH y configure la ruta de guardado configurable. Tiene en cuenta los mensajes de texto no procesados ​​para los vecinos.
+- cambió la variable BOTPATH ​n NMSGPATH y configure la ruta de guardado configurable. Tiene en cuenta los mensajes de texto no procesados ​​para los vecinos.
 - Lista agregada de usuarios aceptados "allowed_user" por @do2sz
 - Agrupa notifica al usuario maestro de los comandos enviados al BOT.
 - Agregación de la notificación del comandante no reconocida.
