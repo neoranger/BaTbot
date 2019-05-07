@@ -31,6 +31,7 @@ BaTbot es un BOT de Telegram simple escrito en Bash que puede responder a los me
 - Enviar mensaje
 - QUE HACER
 ** Uso
+**Modificar archivos token.txt y id.txt con la respectiva información.**
 Iniciar desde la consola:
 #+begin_src 
 ./botbat

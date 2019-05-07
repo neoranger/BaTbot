@@ -5,11 +5,11 @@ VERSION="1.4.3.5\nBot de Telegram en Bash - Versión de NeoRanger"
 
 # Fork de 1.4.3.4 - uGeekPodcast
 
-# Ingrese el token BOT devuelto por BotFather
+# Ingrese el token BOT devuelto por BotFather (crear el archivo token.txt)
 TOKEN=$(cat token.txt)
 TELEGRAMTOKEN=$TOKEN
 
-# Ingrese el ID de usuario maestro para notificaciones de uso
+# Ingrese el ID de usuario maestro para notificaciones de uso (crear el archivo id.txt)
 PERID=$(cat id.txt)
 PERSONALID=$PERID 
  
@@ -33,13 +33,13 @@ declare -A botcommands=(
 	["/myid"]='echo Tu ID es: @USERID'
         ["/hello"]="echo Hi @USERNAME!"
 	["/myuser"]='echo Tu nombre de usuario es: @USERNAME'
-	["/ping ([a-zA-Z0-9]+)"]='echo Pong: @R1'
+	["/ping"]='echo Pong!'
 	["/uptime"]="uptime"
 	["/add ([0-9]+)"]='exec admadduser @USERID @R1'
 	["/del ([0-9]+)"]='exec admdeluser @USERID @R1'
 	["/lista"]='exec admlistuser @USERID'
 	["/run (.*)"]="exec @R1"
-	["/menu"]="echo -e Bienvenido a Mi Bot\n/myid \n/myuser \n/uptime \n/run \n/ping \n/hello \n/add \n/del \n/lista \n/run \n/menu \n/temp \n/df \n/free \n/info \n/who \n/shutdown \n/reboot \n/repoup \n/sysup \n/distup \n/osversion \n/screens \n/weather \n/ps_ram \n/ps_cpu \n/server_torrent_restart \n/nmap_all \n/nmap_active \n\n\n/menu"
+	["/menu"]="echo -e ActionLauncherBot Menu\n/myid \n/myuser \n/uptime \n/run \n/ping \n/hello \n/add \n/del \n/lista \n/run \n/menu \n/temp \n/df \n/free \n/info \n/who \n/shutdown \n/reboot \n/repoup \n/sysup \n/distup \n/osversion \n/screens \n/weather \n/ps_ram \n/ps_cpu \n/server_torrent_restart \n/nmap_all \n/nmap_active \n/check_voltage \n\n\n/menu"
         ["/temp"]="sudo vcgencmd measure_temp"
         ["/df"]="inxi -p"
         ["/free"]="free- m"
@@ -51,13 +51,14 @@ declare -A botcommands=(
         ["/sysup"]="sudo apt-get upgrade -y"
         ["/distup´"]="sudo apt-get dist-upgrade -y"
         ["/osversion"]="lsb_release -a"
-        ["/screens"]="screen -ls | grep "pi" "
+        ["/screens"]="screen -list"
         ["/weather"]="inxi -w"
         ["/ps_ram"]="ps aux | awk '{print $2, $4, $11}' | sort -k2r | head -n 10"
         ["/ps_cpu"]="ps -Ao user,uid,comm,pid,pcpu,tty --sort=-pcpu | head -n 6"
         ["/server_torrent_restart"]="sudo service transmission-daemon restart"
         ["/nmap_all"]="sudo nast -m -i eth0"
         ["/nmap_active"]="sudo nast -g -i eth0"
+        ["/check_voltage"]="vcgencmd get_throttled"
 )
 
 FIRSTTIME=0
@@ -176,7 +177,7 @@ while true; do
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 								else
 									CMDOUTPUT="BOT Privado. No estas autorizado a utilizarlo! tu ID es: ${FROMID}, Comunicate con el administrador para que te habilite."
-									echo "Tu nombre no está en la lista: ${s} ricevuto darecibido por ${FIRSTNAMEUTF8} ${FROMID}"
+									echo "Tu nombre no está en la lista: ${s} recibido por ${FIRSTNAMEUTF8} ${FROMID}"
 									curl -s -d "text=${CMDOUTPUT}&chat_id=${CHATID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
 									if [[ ${FROMID} != ${PERSONALID} ]]; then
 										curl -s -d "text=Usuario no habilitado: ${s} recibido de ${FIRSTNAMEUTF8} ${FROMID}&chat_id=${PERSONALID}" "https://api.telegram.org/bot${TELEGRAMTOKEN}/sendMessage" > /dev/null
