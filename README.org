@@ -1,7 +1,10 @@
-* BaTbot v1.4.3.5 - Bash Telegram BOT
+* BaTbot v1.5 - Bash Telegram BOT
 BaTbot es un BOT de Telegram simple escrito en Bash que puede responder a los mensajes de los usuarios, ejecutar comandos y hacer otras cosas interesantes.
 
 ** CAMBIO
+*** v1.5 - Version By NeoRanger
+- Se agregó el script runbot.sh para que el bot pueda ser invocado en /etc/rc.local para poder ser ejecutado al inicio del sistema.
+
 *** v1.4.3.5 - Fork por NeoRanger
 - Se tradujo del italiano al español los archivos: admadduser, admdeluser y admlistuser.
 - Se agregó archivo .gitignore para que no se tenga en cuenta los archivos *.lmsg que genera el bot.

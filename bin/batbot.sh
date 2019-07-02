@@ -20,7 +20,7 @@ BATBOTUSR="/home/pi/.batbot"
 ALLOWEDUSER=$BATBOTUSR/allowed_users
 
 # revisar nuevos mensajes cada X segundos:
-CHECKNEWMSG=5
+CHECKNEWMSG=3
 
 # Comandos
 # respete este formato: ["/ mi comando"] = '<comando del sistema>'
@@ -39,10 +39,10 @@ declare -A botcommands=(
 	["/del ([0-9]+)"]='exec admdeluser @USERID @R1'
 	["/lista"]='exec admlistuser @USERID'
 	["/run (.*)"]="exec @R1"
-	["/menu"]="echo -e ActionLauncherBot Menu\n/myid \n/myuser \n/uptime \n/run \n/ping \n/hello \n/add \n/del \n/lista \n/run \n/menu \n/temp \n/df \n/free \n/info \n/who \n/shutdown \n/reboot \n/repoup \n/sysup \n/distup \n/osversion \n/screens \n/weather \n/ps_ram \n/ps_cpu \n/server_torrent_restart \n/nmap_all \n/nmap_active \n/check_voltage \n\n\n/menu"
+	["/menu"]="echo -e ActionLauncherBot Menu: \n/myid \n/myuser \n/uptime \n/run \n/ping \n/hello \n/add \n/del \n/lista \n/run \n/menu \n/temp \n/df \n/free \n/info \n/who \n/shutdown \n/reboot \n/repoup \n/sysup \n/distup \n/osversion \n/screens \n/weather \n/ps_ram \n/ps_cpu \n/server_torrent_restart \n/nmap_all \n/nmap_active \n/check_voltage \n\n\n/menu"
         ["/temp"]="sudo vcgencmd measure_temp"
         ["/df"]="inxi -p"
-        ["/free"]="free- m"
+        ["/free"]="free -m"
         ["/info"]="screenfetch -n"
         ["/who"]="who"
         ["/shutdown"]="sudo shutdown -h now"
